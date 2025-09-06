@@ -58,7 +58,15 @@
   <div id="cards"></div>
 
   <h2>Summary Table</h2>
-  <input type="text" id="search-bar" placeholder="Search students...">
+  <div class="search-container">
+    <input type="text" id="search-bar" placeholder="Search students...">
+    <select id="search-filter">
+      <option value="all">All</option>
+      <option value="name">Name</option>
+      <option value="prog">Programme</option>
+      <option value="year">Year</option>
+    </select>
+  </div>
   <table id="summary">
     <thead>
       <tr>

@@ -3,8 +3,9 @@ const live = document.getElementById("live");
 const cards = document.getElementById("cards");
 const summaryBody = document.querySelector("#summary tbody");
 
-// --- Get Search Bar from HTML ---
+// --- Get Search Bar and Filter ---
 const searchInput = document.getElementById("search-bar");
+const filterSelect = document.getElementById("search-filter");
 
 // Email validation function
 function validateEmail(value) {
@@ -144,18 +145,61 @@ form.addEventListener("submit", (e) => {
   form.reset();
 });
 
-// --- Search Functionality ---
-searchInput.addEventListener("input", () => {
+// --- Search & Filter Functionality ---
+function applySearchFilter() {
   const term = searchInput.value.toLowerCase();
+  const filter = filterSelect.value;
+
   Array.from(summaryBody.querySelectorAll("tr")).forEach(row => {
-    const text = row.textContent.toLowerCase();
+    const cells = row.querySelectorAll("td");
+    let text = "";
+
+    switch (filter) {
+      case "name":
+        text = cells[0].textContent.toLowerCase();
+        break;
+      case "prog":
+        text = cells[1].textContent.toLowerCase();
+        break;
+      case "year":
+        text = cells[2].textContent.toLowerCase();
+        break;
+      default:
+        text = row.textContent.toLowerCase();
+    }
+
     row.style.display = text.includes(term) ? "" : "none";
   });
+
   Array.from(cards.querySelectorAll(".card-person")).forEach(card => {
-    const text = card.textContent.toLowerCase();
+    const name = card.querySelector("h3").textContent.toLowerCase();
+    const prog = card.querySelector("p").textContent.toLowerCase();
+    const allText = card.textContent.toLowerCase();
+
+    let text = "";
+    switch (filter) {
+      case "name":
+        text = name;
+        break;
+      case "prog":
+        text = prog;
+        break;
+      case "year":
+        text = prog;
+        break;
+      default:
+        text = allText;
+    }
+
     card.style.display = text.includes(term) ? "" : "none";
   });
-});
+}
+
+searchInput.addEventListener("input", applySearchFilter);
+filterSelect.addEventListener("change", applySearchFilter);
 
 // Load saved students on page load
-window.addEventListener("DOMContentLoaded", loadStudents);
+window.addEventListener("DOMContentLoaded", () => {
+  filterSelect.value = "all";
+  loadStudents();
+});
